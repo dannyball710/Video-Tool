@@ -71,7 +71,7 @@
                     }
                 });
             } else if (e.key.toLowerCase() == "i") {
-                if(document.pictureInPictureElement){
+                if (document.pictureInPictureElement) {
                     document.exitPictureInPicture();
                     return
                 }
@@ -79,12 +79,12 @@
                 let max_width = 0;
                 let max_video;
                 videos.forEach((v) => {
-                    if(v.videoWidth > max_width){
+                    if (v.videoWidth > max_width) {
                         max_video = v;
                         max_width = v.videoWidth;
                     }
                 });
-                if(max_video){
+                if (max_video) {
                     max_video.requestPictureInPicture();
                 }
                 e.preventDefault();
@@ -161,9 +161,9 @@
         var max = 0;
         var maxVideo = undefined;
         for (var video of videos) {
-            if (video.videoWidth > max) {
+            if (video.offsetWidth > max) {
                 maxVideo = video;
-                max = video.videoWidth;
+                max = video.offsetWidth;
             }
         }
         var video = maxVideo;
