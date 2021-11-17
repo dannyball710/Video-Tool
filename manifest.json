@@ -1,13 +1,25 @@
 {
-	"manifest_version" : 3,
-	"name" : "Video Tool",
-	"description" : "影片工具",
-	"version" : "1.0",
-	"content_scripts" : [
+	"manifest_version": 2,
+	"name": "Video Tool",
+	"description": "影片工具",
+	"version": "1.0",
+	"content_scripts": [
 		{
-			"matches" : ["<all_urls>"],
-            "js" : ["video.js"],
-            "css":["style.css"]
+			"matches": [
+				"<all_urls>"
+			],
+			"js": [
+				"video.js"
+			],
+			"css": [
+				"style.css"
+			]
 		}
+	],
+	"browser_action": {
+		"default_popup": "popup.html"
+	},
+	"permissions": [
+		"activeTab"
 	]
 }

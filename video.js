@@ -3,7 +3,6 @@
     var show = false;
     var keydown = false;
     var timeout = -1;
-    var fullElement = 0;
     if (localStorage.getItem("rv-rate") != null) {
         rate = parseFloat(localStorage.getItem("rv-rate"));
     }
@@ -57,7 +56,7 @@
      * @param {KeyboardEvent} e 
      * @returns 
      */
-    document.body.onkeypress = (e) => {
+    document.body.addEventListener("keypress", (e) => {
         if (keydown) {
             if (e.key.toLowerCase() == "p") {
                 screenshot();
@@ -71,24 +70,29 @@
                     }
                 });
             } else if (e.key.toLowerCase() == "i") {
-                if (document.pictureInPictureElement) {
-                    document.exitPictureInPicture();
-                    return
-                }
-                var videos = getVideos();
-                let max_width = 0;
-                let max_video;
-                videos.forEach((v) => {
-                    if (v.videoWidth > max_width) {
-                        max_video = v;
-                        max_width = v.videoWidth;
-                    }
-                });
-                if (max_video) {
-                    max_video.requestPictureInPicture();
-                }
+                pip();
+                e.stopPropagation();
                 e.preventDefault();
             }
+        }
+    });
+
+    function pip() {
+        if (document.pictureInPictureElement) {
+            document.exitPictureInPicture();
+            return
+        }
+        var videos = getVideos();
+        let max_width = 0;
+        let max_video;
+        videos.forEach((v) => {
+            if (v.videoWidth > max_width) {
+                max_video = v;
+                max_width = v.videoWidth;
+            }
+        });
+        if (max_video) {
+            max_video.requestPictureInPicture();
         }
     }
 
@@ -103,9 +107,11 @@
 
     document.body.addEventListener("mousewheel", function (e) {
         if (keydown) {
-            var d = e.deltaY / 2000;
+            var d = e.deltaY / 2000 / 0.05;
+            d = parseInt(d);
+            d = d * 0.05;
             rate -= d;
-            if (rate <= 0.1) {
+            if (rate <= 0.2) {
                 rate = 0.2;
             }
             if (rate >= 16) {
@@ -147,6 +153,11 @@
                 v.playbackRate = rate;
             }
         });
+        // chrome.runtime.sendMessage({
+        //     action: "change_rate",
+        //     data: rate
+        // }, function (response) {
+        // });
     }
 
     function getVideos() {
@@ -191,4 +202,22 @@
             canvas.toBlob(resolve, "png", 1);
         });
     }
+
+    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+        if (message.action == "get_rate") {
+            sendResponse(rate);
+            return;
+        } else if (message.action == "set_rate") {
+            rate = message.data;
+            setRate();
+            sendResponse(rate);
+            return;
+        } else if (message.action == "videoshot") {
+            screenshot();
+            sendResponse(rate);
+        } else if (message.action == "pip") {
+            pip();
+            sendResponse(rate);
+        }
+    });
 })();
