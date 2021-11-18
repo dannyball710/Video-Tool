@@ -135,7 +135,6 @@
                     }, 500);
                 }
             }, 1000);
-            localStorage.setItem("rv-rate", rate);
             return true;
         }
     });
@@ -148,6 +147,7 @@
 
     function setRate() {
         var videos = getVideos();
+        localStorage.setItem("rv-rate", rate);
         videos.forEach((v) => {
             if (v.playbackRate != rate) {
                 v.playbackRate = rate;
