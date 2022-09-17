@@ -42,6 +42,9 @@
     observer.observe(document.body, { attributes: true, childList: true, subtree: true });
 
     document.body.onkeydown = (e) => {
+        if (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA") {
+            return;
+        }
         if (e.keyCode == 192) {
             var w = window.innerWidth - document.body.offsetWidth;
             keydown = true;
@@ -57,6 +60,10 @@
      * @returns 
      */
     document.body.addEventListener("keypress", (e) => {
+        // focus in the input box
+        if (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA") {
+            return;
+        }
         if (keydown) {
             if (e.key.toLowerCase() == "p") {
                 screenshot();
@@ -97,6 +104,10 @@
     }
 
     document.body.onkeyup = (e) => {
+        // focus in the input box
+        if (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA") {
+            return;
+        }
         if (e.keyCode == 192) {
             keydown = false;
             document.body.style.overflowY = "auto";
