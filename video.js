@@ -201,16 +201,36 @@
         var url = URL.createObjectURL(blob);
         var a = document.createElement("a");
         a.href = url;
-        a.download = Date.now() + ".png";
+        let filename = document.title + " " + getTimeString(video.currentTime);
+        a.download = filename + ".png";
         document.body.append(a);
         a.click();
         document.body.removeChild(a);
         document.body.removeChild(canvas);
     }
 
+    function getTimeString(sec) {
+        var h = parseInt(sec / 3600);
+        var m = parseInt((sec - h * 3600) / 60);
+        var s = parseInt(sec - h * 3600 - m * 60);
+        var str = "";
+        if (h > 0) {
+            str += h + "：";
+        }
+        if (m < 10) {
+            str += "0";
+        }
+        str += m + "：";
+        if (s < 10) {
+            str += "0";
+        }
+        str += s;
+        return str;
+    }
+
     function canvasToBlob(canvas) {
         return new Promise((resolve) => {
-            canvas.toBlob(resolve, "png", 1);
+            canvas.toBlob(resolve, "png", 0.9);
         });
     }
 
