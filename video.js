@@ -48,7 +48,6 @@
         if (e.keyCode == 192) {
             var w = window.innerWidth - document.body.offsetWidth;
             keydown = true;
-            e.preventDefault();
             document.body.style.overflowY = "hidden";
             document.body.style.marginRight = w + "px";
         }
